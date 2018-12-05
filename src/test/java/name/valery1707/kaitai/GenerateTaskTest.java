@@ -115,10 +115,11 @@ public class GenerateTaskTest {
 		BuildResult result = integrationTest("it-skip");
 
 		assertThat(result.getOutput())
-			.contains("Skip KaiTai generation")
+			.contains(":" + TASK)
+			.doesNotContain("Skip KaiTai generation")
+			.contains("BUILD SUCCESSFUL")
 		;
-		//todo SKIPPED
 		//noinspection ConstantConditions
-		assertThat(result.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		assertThat(result.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.SKIPPED);
 	}
 }
