@@ -1,0 +1,12 @@
+buildscript {
+	dependencies {
+		// Replaced on copy
+		${dependencies}
+	}
+}
+
+apply plugin: 'name.valery1707.kaitai'
+
+kaitai {
+	skip = true
+}
