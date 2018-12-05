@@ -9,5 +9,5 @@ class GenerateConfig {
 	 * @since 0.0.1
 	 */
 	@Internal
-	boolean skip = false;
+	boolean skip = false
 }
