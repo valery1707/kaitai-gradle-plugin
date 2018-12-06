@@ -2,7 +2,6 @@ package name.valery1707.kaitai;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.gradle.testkit.runner.TaskOutcome;
@@ -25,7 +24,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.*;
 import static java.util.stream.Collectors.joining;
 import static name.valery1707.kaitai.GenerateTask.TASK;
-import static name.valery1707.kaitai.MojoUtils.scanFiles;
+import static name.valery1707.kaitai.KaitaiUtils.scanFiles;
 import static org.apache.commons.io.filefilter.FileFilterUtils.directoryFileFilter;
 import static org.apache.commons.io.filefilter.FileFilterUtils.nameFileFilter;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,8 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class GenerateTaskTest {
 	private static Path mkdirs(Path target) {
 		try {
-			return MojoUtils.mkdirs(target);
-		} catch (MojoExecutionException e) {
+			return KaitaiUtils.mkdirs(target);
+		} catch (KaitaiException e) {
 			throw new IllegalStateException(e);
 		}
 	}
@@ -64,7 +63,7 @@ public class GenerateTaskTest {
 	@Rule
 	public final TemporaryFolder projectDir = new TemporaryFolder();
 
-	private BuildResult integrationTest(String path) throws MojoExecutionException, IOException {
+	private BuildResult integrationTest(String path) throws KaitaiException, IOException {
 		Map<String, String> filter = new HashMap<>(1);
 
 		List<Path> main = new ArrayList<>();
@@ -111,7 +110,7 @@ public class GenerateTaskTest {
 	}
 
 	@Test
-	public void testItSkip() throws MojoExecutionException, IOException {
+	public void testItSkip() throws KaitaiException, IOException {
 		BuildResult result = integrationTest("it-skip");
 
 		assertThat(result.getOutput())
