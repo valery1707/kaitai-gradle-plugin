@@ -17,8 +17,9 @@ version = "0.0.1"
 
 dependencies {
 	implementation(gradleApi())
-	implementation("name.valery1707.kaitai:kaitai-maven-plugin:0.1.1")
-	implementation("org.apache.maven:maven-plugin-api:3.5.0")
+	implementation("name.valery1707.kaitai:kaitai-maven-plugin:0.1.2") {
+		exclude(group = "com.jcabi")
+	}
 
 	testImplementation(gradleTestKit())
 	testImplementation("junit:junit:4.12")
