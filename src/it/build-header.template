@@ -1,0 +1,15 @@
+buildscript {
+	repositories {
+		jcenter()
+		//Used for access to snapshot version of dependencies
+		mavenLocal()
+	}
+	dependencies {
+		// Replaced on copy
+		${dependencies}
+		//We depend on class-files and don't know about transitive dependencies
+		classpath("name.valery1707.kaitai:kaitai-maven-plugin:0.1.2-SNAPSHOT") {
+			exclude group: "com.jcabi"
+		}
+	}
+}

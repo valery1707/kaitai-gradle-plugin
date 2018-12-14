@@ -1,0 +1,21 @@
+${build-header.template}
+
+//Use case: source directory with KaiTai templates exists and compiled
+
+apply plugin: 'java'
+apply plugin: 'name.valery1707.kaitai'
+
+repositories {
+	jcenter()
+}
+
+dependencies {
+	implementation("io.kaitai:kaitai-struct-runtime:0.8")
+
+	testImplementation("junit:junit:4.12")
+	testImplementation("org.assertj:assertj-core:2.9.0")
+}
+
+kaitai {
+	packageName = 'name.valery1707.kaitai.it'
+}

@@ -2,6 +2,8 @@ plugins {
 	groovy
 	`java-library`
 	`java-gradle-plugin`
+//	`maven-publish`
+	maven
 }
 
 repositories {
@@ -13,7 +15,7 @@ configure<JavaPluginConvention> {
 	targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-version = "0.0.1"
+version = "0.1.0"
 
 dependencies {
 	implementation(gradleApi())

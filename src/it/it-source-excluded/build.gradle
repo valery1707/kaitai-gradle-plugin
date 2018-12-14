@@ -1,0 +1,10 @@
+${build-header.template}
+
+//Use case: source directory with KaiTai templates exists but all files are excluded
+
+apply plugin: 'java'
+apply plugin: 'name.valery1707.kaitai'
+
+kaitai {
+	excludes = ["ico.ksy"]
+}

@@ -1,10 +1,6 @@
 ${build-header.template}
 
-//Use case: Plugin execution skipped by user
+//Use case: source directory with KaiTai templates exists but empty
 
 apply plugin: 'java'
 apply plugin: 'name.valery1707.kaitai'
-
-kaitai {
-	skip = true
-}
