@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static name.valery1707.kaitai.GenerateTask.TASK;
+import static name.valery1707.kaitai.GradleUtils.copyIntegrationProject;
 import static name.valery1707.kaitai.GradleUtils.gradleBuild;
 import static name.valery1707.kaitai.KaitaiUtils.scanFiles;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -102,6 +103,31 @@ public class GenerateTaskTest {
 		assertThat(result.task(":" + "compileJava").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
 		//noinspection ConstantConditions
 		assertThat(result.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		assertThatCompilerWasDownloaded();
+	}
+
+	@Test
+	public void testItDoubleCompile() throws IOException, KaitaiException {
+		Path project = copyIntegrationProject("it-source-exists", projectDir.getRoot());
+
+		//Build after checkout
+		BuildResult first = gradleBuild(project, TASK, "build");
+		//noinspection ConstantConditions
+		assertThat(first.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		//noinspection ConstantConditions
+		assertThat(first.task(":" + "compileJava").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		//noinspection ConstantConditions
+		assertThat(first.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+
+		//Second build without changes
+		BuildResult second = gradleBuild(project, TASK, "build");
+		//noinspection ConstantConditions
+		assertThat(second.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.UP_TO_DATE);
+		//noinspection ConstantConditions
+		assertThat(second.task(":" + "compileJava").getOutcome()).isEqualByComparingTo(TaskOutcome.UP_TO_DATE);
+		//noinspection ConstantConditions
+		assertThat(second.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.UP_TO_DATE);
+
 		assertThatCompilerWasDownloaded();
 	}
 }

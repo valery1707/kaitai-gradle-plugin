@@ -23,6 +23,13 @@ class GenerateTask extends DefaultTask {
 		onlyIf = {
 			return !config.skip
 		}
+		//Add generated directory into Gradle's build scope
+		if (project.hasProperty("sourceSets")) {
+			def generatedRoot = output.toPath().resolve("src")
+			(project.property("sourceSets") as SourceSetContainer)
+				.findByName("main")
+				?.java { it.srcDir(generatedRoot.toAbsolutePath().normalize().toString()) }
+		}
 		return super.configure(closure)
 	}
 
@@ -82,9 +89,8 @@ class GenerateTask extends DefaultTask {
 
 		//Generate Java sources
 		Path output = mkdirs(output.toPath());
-		Path generatedRoot;
 		try {
-			generatedRoot = KaitaiGenerator
+			KaitaiGenerator
 				.generator(kaitai, output, packageName)
 				.withSource(source)
 				.generate(logger);
@@ -93,13 +99,6 @@ class GenerateTask extends DefaultTask {
 				"Fail to generate Java files"
 				, e
 			);
-		}
-
-		//Add generated directory into Gradle's build scope
-		if (project.hasProperty("sourceSets")) {
-			(project.property("sourceSets") as SourceSetContainer)
-				.findByName("main")
-				?.java { it.srcDir(generatedRoot.toAbsolutePath().normalize().toString()) }
 		}
 	}
 }
