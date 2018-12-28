@@ -1,0 +1,54 @@
+//* For integration test
+${build-header.template}
+// */
+
+/* For direct build
+buildscript {
+	repositories {
+		jcenter()
+		//Used for access to snapshot version of dependencies
+		mavenLocal()
+	}
+	dependencies {
+		classpath("name.valery1707.kaitai:kaitai-gradle-plugin:0.1.0")
+	}
+}
+// */
+
+//Use case: source directory with KaiTai templates exists and compiled
+//Test code is written in Kotlin
+
+// Kotlin specific configuration
+buildscript {
+	ext.kotlin_version = '1.3.11'
+	ext.junit_version = '5.3.2'
+
+	dependencies {
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+	}
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'name.valery1707.kaitai'
+
+repositories {
+	jcenter()
+}
+
+dependencies {
+	implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
+	implementation("io.kaitai:kaitai-struct-runtime:0.8")
+
+	testImplementation("org.junit.jupiter:junit-jupiter-api:$junit_version")
+	testImplementation("org.junit.jupiter:junit-jupiter-params:$junit_version")
+	testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit_version")
+	testImplementation("org.assertj:assertj-core:3.11.1")
+}
+
+kaitai {
+	packageName = 'name.valery1707.kaitai.it'
+}
+
+test {
+	useJUnitPlatform()
+}

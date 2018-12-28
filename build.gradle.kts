@@ -15,6 +15,7 @@ configure<JavaPluginConvention> {
 	targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+group = "name.valery1707.kaitai"
 version = "0.1.0"
 
 dependencies {

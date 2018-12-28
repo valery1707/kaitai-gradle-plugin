@@ -30,6 +30,12 @@ class GenerateTask extends DefaultTask {
 				.findByName("main")
 				?.java { it.srcDir(generatedRoot.toAbsolutePath().normalize().toString()) }
 		}
+		//Add this stage as dependency for compile scopes
+		config.runBefore.each {
+			project.getTasksByName(it, false).forEach {
+				it.dependsOn(TASK)
+			}
+		}
 		return super.configure(closure)
 	}
 

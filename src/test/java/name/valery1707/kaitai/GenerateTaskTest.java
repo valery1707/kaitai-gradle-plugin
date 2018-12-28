@@ -130,4 +130,44 @@ public class GenerateTaskTest {
 
 		assertThatCompilerWasDownloaded();
 	}
+
+	/**
+	 * We run simply `build` but want implicitly generate java-files from Kaitai templates.
+	 */
+	@Test
+	public void testKaitaiBeforeJavaOnBuild() throws IOException, KaitaiException {
+		BuildResult result = gradleBuild("it-source-exists", projectDir.getRoot(), "build");
+
+		assertThat(result.getOutput())
+			.contains(":" + TASK)
+			.contains("BUILD SUCCESSFUL")
+		;
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + "compileJava").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		assertThatCompilerWasDownloaded();
+	}
+
+	/**
+	 * We run simply `build` but want implicitly generate java-files from Kaitai templates.
+	 */
+	@Test
+	public void testKaitaiBeforeKotlinOnBuild() throws IOException, KaitaiException {
+		BuildResult result = gradleBuild("it-source-kotlin", projectDir.getRoot(), "build");
+
+		assertThat(result.getOutput())
+			.contains(":" + TASK)
+			.contains("BUILD SUCCESSFUL")
+		;
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + "compileJava").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		assertThatCompilerWasDownloaded();
+	}
 }

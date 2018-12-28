@@ -73,6 +73,13 @@ class GenerateConfig {
 	 */
 	String packageName
 
+	/**
+	 * Which goals need to depends on kaitai generation result
+	 *
+	 * @since 0.1.0
+	 */
+	String[] runBefore = ["compileJava", "compileKotlin", "compileScala"]
+
 	void configureDefaults(Project project) {
 		url = KaitaiUtils.prepareUrl(url, version)
 
