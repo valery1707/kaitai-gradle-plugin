@@ -19,7 +19,6 @@ class GenerateTask extends DefaultTask {
 	@Override
 	Task configure(Closure closure) {
 		config = project.extensions.getByType(GenerateConfig)
-		config.configureDefaults(project)
 		onlyIf = {
 			return !config.skip
 		}

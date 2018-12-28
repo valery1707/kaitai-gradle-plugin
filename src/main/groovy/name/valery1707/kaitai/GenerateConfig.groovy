@@ -80,7 +80,11 @@ class GenerateConfig {
 	 */
 	String[] runBefore = ["compileJava", "compileKotlin", "compileScala"]
 
-	void configureDefaults(Project project) {
+	GenerateConfig(Project project) {
+		initDefaults(project)
+	}
+
+	private void initDefaults(Project project) {
 		url = KaitaiUtils.prepareUrl(url, version)
 
 		if (!sourceDirectory) {

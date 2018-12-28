@@ -8,7 +8,7 @@ class KaitaiPlugin implements Plugin<Project> {
 
 	@Override
 	void apply(Project project) {
-		project.extensions.create(GenerateTask.TASK, GenerateConfig)
+		project.extensions.create(GenerateTask.TASK, GenerateConfig, project)
 		project.task(GenerateTask.TASK, type: GenerateTask) {
 			group = GROUP
 			description = GenerateTask.DESC
