@@ -51,3 +51,18 @@ kaitai {
 
 # Developments
 For debug on integration tests you must previously call some gradle tasks: `jar assemble pluginUnderTestMetadata`
+
+Deploy new version manually:
+1. Update `version` into releasing value and commit with `Prepare release 0.1.0`
+1. Prepare `gradle.properties` from `gradle-template.properties`
+1. Run `./gradlew clean build uploadArchives`
+1. Open [Staging Repository](https://oss.sonatype.org/#stagingRepositories)
+1. Search for `namevalery1707` and select founded
+1. Check content on tab `Content`
+1. Press `Close` with comment `Release version 0.1.0`
+1. Wait for operation:
+1. On failure: 
+    * Check reason on tab `Activity`
+    * Press `Drop` with some comment
+1. Press `Release` with comment `Release version 0.1.0`
+1. Update `version` into snapshot value and commit with `Prepare for next development iteration`

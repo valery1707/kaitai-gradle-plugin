@@ -14,6 +14,7 @@ class GenerateTask extends DefaultTask {
 	public static final String TASK = "kaitai"
 	public static final String DESC = "Generate java-classes for Kaitai structures"
 
+	@Internal
 	GenerateConfig config
 
 	@Override
