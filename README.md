@@ -1,4 +1,5 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/name.valery1707.kaitai/kaitai-gradle-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/name.valery1707.kaitai/kaitai-gradle-plugin)
+[![License](https://img.shields.io/github/license/valery1707/kaitai-gradle-plugin.svg)](https://opensource.org/licenses/MIT)
 
 Gradle plugin for http://kaitai.io/
 
