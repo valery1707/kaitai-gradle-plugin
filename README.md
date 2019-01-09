@@ -1,6 +1,8 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/name.valery1707.kaitai/kaitai-gradle-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/name.valery1707.kaitai/kaitai-gradle-plugin)
 [![License](https://img.shields.io/github/license/valery1707/kaitai-gradle-plugin.svg)](https://opensource.org/licenses/MIT)
 
+[![Build Status](https://travis-ci.org/valery1707/kaitai-gradle-plugin.svg?branch=master)](https://travis-ci.org/valery1707/kaitai-gradle-plugin)
+
 Gradle plugin for http://kaitai.io/
 
 # Usage

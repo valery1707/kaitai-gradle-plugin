@@ -1,0 +1,12 @@
+language: java
+
+sudo: false # faster builds
+
+jdk:
+  - openjdk8
+  - oraclejdk8
+  - oraclejdk9
+#  - oraclejdk11 # External process '/tmp/some-path/kaitai-struct-compiler --version' returned 1 after ___ms
+
+script:
+  - ./gradlew clean build --stacktrace

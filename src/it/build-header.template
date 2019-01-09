@@ -8,7 +8,7 @@ buildscript {
 		// Replaced on copy
 		${dependencies}
 		//We depend on class-files and don't know about transitive dependencies
-		classpath("name.valery1707.kaitai:kaitai-maven-plugin:0.1.2-SNAPSHOT") {
+		classpath("name.valery1707.kaitai:kaitai-maven-plugin:0.1.2") {
 			exclude group: "com.jcabi"
 		}
 	}
