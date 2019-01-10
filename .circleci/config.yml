@@ -10,6 +10,13 @@ jobs:
     steps:
       - checkout
 
+      - run:
+          name: Detect project version
+          command: |
+            echo $'export PROJECT_VERSION=$(cat build.gradle.kts | grep -E "version ?=" | cut -d\'"\' -f2)' >> $BASH_ENV
+            source $BASH_ENV
+            echo "Detect version: ${PROJECT_VERSION}"
+
       - restore_cache: # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
           key: kaitai-gradle-plugin-{{ checksum "build.gradle.kts" }}
 
@@ -23,5 +30,10 @@ jobs:
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: build/test-results/test
 
+      - run: # Store artifacts don't support interpolation https://discuss.circleci.com/t/-/11226
+          name: Prepare artifacts
+          command: |
+            cp -v build/libs/kaitai-gradle-plugin-${PROJECT_VERSION}.jar build/libs/kaitai-gradle-plugin.jar
+
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: build/libs/kaitai-gradle-plugin-0.2.0-SNAPSHOT.jar # todo version hardcoded
+          path: build/libs/kaitai-gradle-plugin.jar
