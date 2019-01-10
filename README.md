@@ -2,6 +2,7 @@
 [![License](https://img.shields.io/github/license/valery1707/kaitai-gradle-plugin.svg)](https://opensource.org/licenses/MIT)
 
 [![Build Status](https://travis-ci.org/valery1707/kaitai-gradle-plugin.svg?branch=master)](https://travis-ci.org/valery1707/kaitai-gradle-plugin)
+[![CircleCI](https://circleci.com/gh/valery1707/kaitai-gradle-plugin/tree/master.svg?style=svg)](https://circleci.com/gh/valery1707/kaitai-gradle-plugin/tree/master)
 
 Gradle plugin for http://kaitai.io/
 

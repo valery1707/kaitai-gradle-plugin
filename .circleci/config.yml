@@ -1,0 +1,27 @@
+version: 2
+jobs:
+  build:
+
+    working_directory: ~/kaitai-gradle-plugin
+
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch # https://hub.docker.com/r/circleci/openjdk/tags
+
+    steps:
+      - checkout
+
+      - restore_cache: # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: kaitai-gradle-plugin-{{ checksum "build.gradle.kts" }}
+
+      - run: ./gradlew clean build
+
+      - save_cache: # saves the project dependencies
+          paths:
+            - ~/.gradle
+          key: kaitai-gradle-plugin-{{ checksum "build.gradle.kts" }}
+
+      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: build/test-results/test
+
+      - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          path: build/libs/kaitai-gradle-plugin-0.2.0-SNAPSHOT.jar # todo version hardcoded
