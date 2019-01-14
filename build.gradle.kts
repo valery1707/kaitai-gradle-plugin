@@ -4,9 +4,9 @@ plugins {
 	groovy
 	`java-library`
 	`java-gradle-plugin`
-//	`maven-publish`
 	maven
 	signing
+	id("com.gradle.plugin-publish") version "0.10.0"
 }
 
 repositories {
@@ -106,6 +106,28 @@ tasks.getByName<Upload>("uploadArchives") {
 					}
 				}
 			}
+		}
+	}
+}
+
+// Use java-gradle-plugin to generate plugin descriptors and specify plugin ids
+gradlePlugin {
+	plugins {
+		create("kaitaiPlugin") {
+			id = "name.valery1707.kaitai"
+			implementationClass = "name.valery1707.kaitai.KaitaiPlugin"
+		}
+	}
+}
+pluginBundle {
+	website = "https://kaitai.io/"
+	vcsUrl = "https://github.com/valery1707/kaitai-gradle-plugin"
+	(plugins) {
+		"kaitaiPlugin" {
+			// id is captured from java-gradle-plugin configuration
+			displayName = "Kaitai Gradle plugin"
+			description = "Automatic compile kaitai format specifications into Java-files"
+			tags = listOf("kaitai", "kaitai-struct", "java", "scala", "kotlin")
 		}
 	}
 }
