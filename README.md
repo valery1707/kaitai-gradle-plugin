@@ -71,4 +71,6 @@ Deploy new version manually:
     * Check reason on tab `Activity`
     * Press `Drop` with some comment
 1. Press `Release` with comment `Release version 0.2.0`
+1. Check exists for [Gradle API keys](https://plugins.gradle.org/u/valery1707) in local configuration
+1. Run `./gradlew publishPlugins`
 1. Update `version` into snapshot value and commit with `Prepare for next development iteration`
