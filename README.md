@@ -1,4 +1,5 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/name.valery1707.kaitai/kaitai-gradle-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/name.valery1707.kaitai/kaitai-gradle-plugin)
+[![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/name/valery1707/kaitai/name.valery1707.kaitai.gradle.plugin/maven-metadata.xml.svg?colorB=007ec6&label=gradle-plugin)](https://plugins.gradle.org/plugin/name.valery1707.kaitai)
 [![License](https://img.shields.io/github/license/valery1707/kaitai-gradle-plugin.svg)](https://opensource.org/licenses/MIT)
 
 [![Build Status](https://travis-ci.org/valery1707/kaitai-gradle-plugin.svg?branch=master)](https://travis-ci.org/valery1707/kaitai-gradle-plugin)
