@@ -15,11 +15,11 @@ class GenerateTask extends DefaultTask {
 	public static final String DESC = "Generate java-classes for Kaitai structures"
 
 	@Internal
-	GenerateConfig config
+	KaitaiExtension config
 
 	@Override
 	Task configure(Closure closure) {
-		config = project.extensions.getByType(GenerateConfig)
+		config = project.extensions.getByType(KaitaiExtension)
 		onlyIf = {
 			return !config.skip
 		}

@@ -1,5 +1,6 @@
 package name.valery1707.kaitai;
 
+import org.buildobjects.process.ProcResult;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.Rule;
@@ -11,8 +12,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static name.valery1707.kaitai.GenerateTask.TASK;
-import static name.valery1707.kaitai.GradleUtils.copyIntegrationProject;
-import static name.valery1707.kaitai.GradleUtils.gradleBuild;
+import static name.valery1707.kaitai.GradleUtils.*;
 import static name.valery1707.kaitai.KaitaiUtils.scanFiles;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -155,8 +155,8 @@ public class GenerateTaskTest {
 	 * We run simply `build` but want implicitly generate java-files from Kaitai templates.
 	 */
 	@Test
-	public void testKaitaiBeforeKotlinOnBuild() throws IOException, KaitaiException {
-		BuildResult result = gradleBuild("it-source-kotlin", projectDir.getRoot(), "build");
+	public void testKaitaiBeforeKotlinWithGroovyOnBuild() throws IOException, KaitaiException {
+		BuildResult result = gradleBuild("it-source-kotlin-groovy", projectDir.getRoot(), "build");
 
 		assertThat(result.getOutput())
 			.contains(":" + TASK)
@@ -167,7 +167,31 @@ public class GenerateTaskTest {
 		//noinspection ConstantConditions
 		assertThat(result.task(":" + "compileJava").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
 		//noinspection ConstantConditions
+		assertThat(result.task(":" + "compileKotlin").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		//noinspection ConstantConditions
 		assertThat(result.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		assertThatCompilerWasDownloaded();
+	}
+
+	/**
+	 * We run simply `build` but want implicitly generate java-files from Kaitai templates.
+	 * <p>
+	 * При сборке KotlinScript-проекта из тестов возникает ошибка "java.lang.ClassNotFoundException: org.gradle.api.tasks.SourceSet".
+	 * При сборке остальных проектов такого не происходит. При сборке вне теста такого тоже не происходит.
+	 * <p>
+	 * А в тесте оказывается что несколько классов не известны classLoader-у и он всё ломает.
+	 */
+	@Test
+	public void testKaitaiBeforeKotlinWithKotlinOnBuild() throws IOException, KaitaiException {
+		ProcResult result = gradleExecute("it-source-kotlin-kotlin", projectDir.getRoot(), "build");
+
+		assertThat(result.getOutputString())
+			.containsPattern(patternMultiline("Task :" + TASK + "$"))
+			.containsPattern(patternMultiline("Task :" + "compileJava" + "$"))
+			.containsPattern(patternMultiline("Task :" + "compileKotlin" + "$"))
+			.containsPattern(patternMultiline("Task :" + "test" + "$"))
+			.contains("BUILD SUCCESSFUL")
+		;
 		assertThatCompilerWasDownloaded();
 	}
 }

@@ -5,7 +5,7 @@ import org.gradle.api.tasks.SourceSetContainer
 
 import static org.apache.commons.lang3.StringUtils.isBlank
 
-class GenerateConfig {
+class KaitaiExtension {
 	/**
 	 * Skip plugin execution (don't read/validate any files, don't generate any java types).
 	 *
@@ -80,7 +80,7 @@ class GenerateConfig {
 	 */
 	String[] runBefore = ["compileJava", "compileKotlin", "compileScala"]
 
-	GenerateConfig(Project project) {
+	KaitaiExtension(Project project) {
 		initDefaults(project)
 	}
 
@@ -88,17 +88,22 @@ class GenerateConfig {
 		url = KaitaiUtils.prepareUrl(url, version)
 
 		if (!sourceDirectory) {
-			def sourceRoot = project
-				.projectDir.toPath()
-				.resolve("src").resolve("main").resolve("resources").resolve("kaitai")
-				.toFile()
 			if (project.hasProperty("sourceSets")) {
-				sourceDirectory = (project.property("sourceSets") as SourceSetContainer)
-					.findByName("main")
-					?.resources?.sourceDirectories?.first()?.toPath()?.resolve("kaitai")?.toFile()
-					?: sourceRoot
-			} else {
-				sourceDirectory = sourceRoot
+				try {
+					sourceDirectory = (project.property("sourceSets") as SourceSetContainer)
+						.findByName("main")
+						?.resources?.sourceDirectories?.first()?.toPath()?.resolve("kaitai")?.toFile()
+						?: null
+				} catch (Throwable e) {
+					project.logger.warn("Property 'sourceSets' is not accessible", e)
+				}
+			}
+			if (!sourceDirectory) {
+				project.logger.debug("Build assumed path from project directory")
+				sourceDirectory = project
+					.projectDir.toPath()
+					.resolve("src").resolve("main").resolve("resources").resolve("kaitai")
+					.toFile()
 			}
 		}
 

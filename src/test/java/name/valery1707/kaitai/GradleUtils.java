@@ -1,7 +1,11 @@
 package name.valery1707.kaitai;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
+import org.buildobjects.process.ProcBuilder;
+import org.buildobjects.process.ProcResult;
+import org.gradle.internal.installation.CurrentGradleInstallation;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 
@@ -89,7 +93,7 @@ public final class GradleUtils {
 			.stream()
 			.map(Path::toAbsolutePath).map(Path::normalize)
 			.map(Path::toString)
-			.map(s -> String.format("classpath files(\"%s\")", s.replace("\\", "\\\\")))
+			.map(s -> String.format("classpath(files(\"%s\"))", s.replace("\\", "\\\\")))
 			.collect(joining(GradleUtils.CRLF_ + "\t\t"))
 		);
 
@@ -98,6 +102,11 @@ public final class GradleUtils {
 			.resolve(name)
 			.toAbsolutePath().normalize();
 		assertThat(source).exists().isReadable().isDirectory();
+		boolean isKotlinScript = Files.exists(source.resolve("build.gradle.kts"));
+		filter.put("excludeJcabi", isKotlinScript
+			? "exclude(group = \"com.jcabi\")" // Kotlin-style
+			: "exclude(group : \"com.jcabi\")" // Groovy-style
+		);
 
 		scanFiles(source.getParent(), new String[]{"*.template"}, new String[0]).forEach(template -> filter.put(
 			template.getFileName().toString(),
@@ -127,13 +136,14 @@ public final class GradleUtils {
 	}
 
 	public static BuildResult gradleBuild(Path root, String... tasks) {
-		ArrayList<String> taskList = new ArrayList<>(Arrays.asList(tasks));
+		List<String> taskList = new ArrayList<>(Arrays.asList(tasks));
 		taskList.add("--stacktrace");
 		taskList.add("--info");
+//		taskList.add("--debug");
+//		taskList = Arrays.asList("tasks", "--all");
 		return GradleRunner.create()
 			.withProjectDir(root.toFile())
 			.withPluginClasspath()
-//			.withArguments("tasks", "--all")
 			.withArguments(taskList)
 			.withDebug(true)
 			.build();
@@ -141,5 +151,26 @@ public final class GradleUtils {
 
 	public static BuildResult gradleBuild(String name, File directory, String... tasks) throws IOException, KaitaiException {
 		return gradleBuild(copyIntegrationProject(name, directory), tasks);
+	}
+
+	public static ProcResult gradleExecute(Path root, String... tasks) {
+		Path gradle = Objects.requireNonNull(CurrentGradleInstallation.get())
+			.getGradleHome().toPath()
+			.resolve("bin").resolve(SystemUtils.IS_OS_WINDOWS ? "gradle.bat" : "gradle");
+		ProcBuilder builder = new ProcBuilder(gradle.toAbsolutePath().normalize().toString())
+			.withExpectedExitStatuses(0)
+			.withNoTimeout()
+			.withWorkingDirectory(root.toFile())
+			.withArgs("build");
+		return builder.run();
+
+	}
+
+	public static ProcResult gradleExecute(String name, File directory, String... tasks) throws IOException, KaitaiException {
+		return gradleExecute(copyIntegrationProject(name, directory), tasks);
+	}
+
+	public static Pattern patternMultiline(String pattern) {
+		return Pattern.compile(pattern, Pattern.MULTILINE);
 	}
 }
