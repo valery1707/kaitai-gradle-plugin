@@ -10,7 +10,7 @@ buildscript {
 		mavenLocal()
 	}
 	dependencies {
-		classpath("name.valery1707.kaitai:kaitai-gradle-plugin:0.1.0")
+		classpath("name.valery1707.kaitai:kaitai-gradle-plugin:0.1.1")
 	}
 }
 // */

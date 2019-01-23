@@ -18,7 +18,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("name.valery1707.kaitai:kaitai-gradle-plugin:0.1.0")
+        classpath("name.valery1707.kaitai:kaitai-gradle-plugin:0.1.1")
     }
 }
 ```
@@ -63,11 +63,11 @@ kaitai {
 For debug on integration tests you must previously call some gradle tasks: `jar assemble pluginUnderTestMetadata`
 
 Deploy new version manually:
-1. Update `version` into releasing value inside this files:
+1. Update `version` from `0.1.1` into `0.1.2` inside this files:
     * `build.gradle.kts` 
     * `README.md` 
     * `CHANGELOG.md` 
-1. Commit with `Prepare release 0.2.0`
+1. Commit with `Prepare release 0.1.2`
 1. Prepare `gradle.properties` from `gradle-template.properties`
 1. Run `./gradlew clean build uploadArchives`
 1. Open [Staging Repository](https://oss.sonatype.org/#stagingRepositories)
@@ -81,4 +81,4 @@ Deploy new version manually:
 1. Press `Release` with comment `Release version 0.2.0`
 1. Check exists for [Gradle API keys](https://plugins.gradle.org/u/valery1707) in local configuration
 1. Run `./gradlew publishPlugins`
-1. Update `version` into snapshot value and commit with `Prepare for next development iteration`
+1. Update `version` into `0.1.2-SNAPSHOT` and commit with `Prepare for next development iteration`

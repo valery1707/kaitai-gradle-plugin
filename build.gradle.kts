@@ -19,7 +19,7 @@ configure<JavaPluginConvention> {
 }
 
 group = "name.valery1707.kaitai"
-version = "0.1.1-SNAPSHOT"
+version = "0.1.1"
 extra["isReleaseVersion"] = !version.toString().endsWith("SNAPSHOT")
 
 dependencies {
