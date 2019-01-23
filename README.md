@@ -73,12 +73,12 @@ Deploy new version manually:
 1. Open [Staging Repository](https://oss.sonatype.org/#stagingRepositories)
 1. Search for `namevalery1707` and select founded
 1. Check content on tab `Content`
-1. Press `Close` with comment `Release version 0.2.0`
+1. Press `Close` with comment `Release version 0.1.2`
 1. Wait for operation:
 1. On failure: 
     * Check reason on tab `Activity`
     * Press `Drop` with some comment
-1. Press `Release` with comment `Release version 0.2.0`
+1. Press `Release` with comment `Release version 0.1.2`
 1. Check exists for [Gradle API keys](https://plugins.gradle.org/u/valery1707) in local configuration
 1. Run `./gradlew publishPlugins`
 1. Update `version` into `0.1.2-SNAPSHOT` and commit with `Prepare for next development iteration`
