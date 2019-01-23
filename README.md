@@ -55,12 +55,19 @@ kaitai {
 | excludes        | String[]     | 0.1.0 | Exclude wildcard pattern list.<br><br>**Default**: []                                                                   |
 | output          | java.io.File | 0.1.0 | Target directory for generated Java source files.<br><br>**Default**: `build/generated/kaitai`                          |
 | packageName     | String       | 0.1.0 | Target package for generated Java source files.<br><br>**Default**: Trying to get project's group or `kaitai` otherwise |
+| executionTimeout| Long         | 0.1.1 | Timeout for execution operations.<br><br>**Default**: `5000` |
+| fromFileClass   | String       | 0.1.1 | Classname with custom KaitaiStream implementations for static builder `fromFile(...)`|
+| opaqueTypes     | Boolean      | 0.1.1 | Allow use opaque (external) types in ksy. See more in [documentation](http://doc.kaitai.io/user_guide.html#opaque-types).|
 
 # Developments
 For debug on integration tests you must previously call some gradle tasks: `jar assemble pluginUnderTestMetadata`
 
 Deploy new version manually:
-1. Update `version` inside `build.gradle.kts` and `README.md` into releasing value and commit with `Prepare release 0.2.0`
+1. Update `version` into releasing value inside this files:
+    * `build.gradle.kts` 
+    * `README.md` 
+    * `CHANGELOG.md` 
+1. Commit with `Prepare release 0.2.0`
 1. Prepare `gradle.properties` from `gradle-template.properties`
 1. Run `./gradlew clean build uploadArchives`
 1. Open [Staging Repository](https://oss.sonatype.org/#stagingRepositories)

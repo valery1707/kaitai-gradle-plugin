@@ -19,12 +19,12 @@ configure<JavaPluginConvention> {
 }
 
 group = "name.valery1707.kaitai"
-version = "0.2.0-SNAPSHOT"
+version = "0.1.1-SNAPSHOT"
 extra["isReleaseVersion"] = !version.toString().endsWith("SNAPSHOT")
 
 dependencies {
 	implementation(gradleApi())
-	implementation("name.valery1707.kaitai:kaitai-maven-plugin:0.1.2") {
+	implementation("name.valery1707.kaitai:kaitai-maven-plugin:0.1.3") {
 		exclude(group = "com.jcabi")
 	}
 

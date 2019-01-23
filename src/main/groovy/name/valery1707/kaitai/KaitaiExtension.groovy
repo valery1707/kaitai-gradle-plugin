@@ -80,6 +80,34 @@ class KaitaiExtension {
 	 */
 	String[] runBefore = ["compileJava", "compileKotlin", "compileScala"]
 
+	/**
+	 * Specify a timeout in millis for the execution operations.
+	 * If not specified the default is 5 seconds.
+	 *
+	 * <p>
+	 * For disabling timeout use any negative value.
+	 *
+	 * @since 0.1.1
+	 */
+	long executionTimeout = 5_000
+
+	/**
+	 * Classname of custom KaitaiStream implementation which will be used in static builder {@code fromFile(...)}.
+	 *
+	 * @since 0.1.1
+	 */
+	String fromFileClass
+
+	/**
+	 * Configure compiler to usage opaque (external) types.
+	 *
+	 * <p>
+	 * Read more at <a href="https://doc.kaitai.io/user_guide.html#opaque-types">Kaitai documentation</a>
+	 *
+	 * @since 0.1.1
+	 */
+	Boolean opaqueTypes
+
 	KaitaiExtension(Project project) {
 		initDefaults(project)
 	}

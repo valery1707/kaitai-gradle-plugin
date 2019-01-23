@@ -135,7 +135,7 @@ public final class GradleUtils {
 		return copyIntegrationProject(name, target.toPath());
 	}
 
-	public static BuildResult gradleBuild(Path root, String... tasks) {
+	public static GradleRunner gradleTestRunner(Path root, String... tasks) {
 		List<String> taskList = new ArrayList<>(Arrays.asList(tasks));
 		taskList.add("--stacktrace");
 		taskList.add("--info");
@@ -146,14 +146,23 @@ public final class GradleUtils {
 			.withPluginClasspath()
 			.withArguments(taskList)
 			.withDebug(true)
+			;
+	}
+
+	public static GradleRunner gradleTestRunner(String name, File directory, String... tasks) throws IOException, KaitaiException {
+		return gradleTestRunner(copyIntegrationProject(name, directory), tasks);
+	}
+
+	public static BuildResult gradleTest(Path root, String... tasks) {
+		return gradleTestRunner(root, tasks)
 			.build();
 	}
 
-	public static BuildResult gradleBuild(String name, File directory, String... tasks) throws IOException, KaitaiException {
-		return gradleBuild(copyIntegrationProject(name, directory), tasks);
+	public static BuildResult gradleTest(String name, File directory, String... tasks) throws IOException, KaitaiException {
+		return gradleTest(copyIntegrationProject(name, directory), tasks);
 	}
 
-	public static ProcResult gradleExecute(Path root, String... tasks) {
+	public static ProcResult gradleNative(Path root, String... tasks) {
 		Path gradle = Objects.requireNonNull(CurrentGradleInstallation.get())
 			.getGradleHome().toPath()
 			.resolve("bin").resolve(SystemUtils.IS_OS_WINDOWS ? "gradle.bat" : "gradle");
@@ -161,13 +170,12 @@ public final class GradleUtils {
 			.withExpectedExitStatuses(0)
 			.withNoTimeout()
 			.withWorkingDirectory(root.toFile())
-			.withArgs("build");
+			.withArgs(tasks);
 		return builder.run();
-
 	}
 
-	public static ProcResult gradleExecute(String name, File directory, String... tasks) throws IOException, KaitaiException {
-		return gradleExecute(copyIntegrationProject(name, directory), tasks);
+	public static ProcResult gradleNative(String name, File directory, String... tasks) throws IOException, KaitaiException {
+		return gradleNative(copyIntegrationProject(name, directory), tasks);
 	}
 
 	public static Pattern patternMultiline(String pattern) {

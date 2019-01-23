@@ -36,9 +36,25 @@ public class GenerateTaskTest {
 		assertThat(compiler()).isNotEmpty();
 	}
 
+	private Path buildDir() {
+		return projectDir.getRoot().toPath().resolve("build");
+	}
+
+	private Path buildTemplate(String name) {
+		return buildDir().resolve("resources/main/kaitai").resolve(name + ".ksy");
+	}
+
+	private Path generatedDir() {
+		return buildDir().resolve("generated");
+	}
+
+	private Path generatedClass(String name) {
+		return generatedDir().resolve("kaitai/src/name/valery1707/kaitai/it").resolve(name + ".java");
+	}
+
 	@Test
 	public void testItSkip() throws IOException, KaitaiException {
-		BuildResult result = gradleBuild("it-skip", projectDir.getRoot(), TASK);
+		BuildResult result = gradleTest("it-skip", projectDir.getRoot(), TASK);
 
 		assertThat(result.getOutput())
 			.contains(":" + TASK)
@@ -47,12 +63,15 @@ public class GenerateTaskTest {
 		;
 		//noinspection ConstantConditions
 		assertThat(result.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.SKIPPED);
+
 		assertThatCompilerNotDownloaded();
+
+		assertThat(buildDir()).doesNotExist();
 	}
 
 	@Test
 	public void testItSourceAbsent() throws IOException, KaitaiException {
-		BuildResult result = gradleBuild("it-source-absent", projectDir.getRoot(), TASK);
+		BuildResult result = gradleTest("it-source-absent", projectDir.getRoot(), TASK);
 
 		assertThat(result.getOutput())
 			.contains(":" + TASK)
@@ -60,12 +79,15 @@ public class GenerateTaskTest {
 		;
 		//noinspection ConstantConditions
 		assertThat(result.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.NO_SOURCE);
+
 		assertThatCompilerNotDownloaded();
+
+		assertThat(buildDir()).doesNotExist();
 	}
 
 	@Test
 	public void testItSourceEmpty() throws IOException, KaitaiException {
-		BuildResult result = gradleBuild("it-source-empty", projectDir.getRoot(), TASK);
+		BuildResult result = gradleTest("it-source-empty", projectDir.getRoot(), TASK);
 
 		assertThat(result.getOutput())
 			.contains(":" + TASK)
@@ -73,12 +95,15 @@ public class GenerateTaskTest {
 		;
 		//noinspection ConstantConditions
 		assertThat(result.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.NO_SOURCE);
+
 		assertThatCompilerNotDownloaded();
+
+		assertThat(buildDir()).doesNotExist();
 	}
 
 	@Test
 	public void testItSourceExcluded() throws IOException, KaitaiException {
-		BuildResult result = gradleBuild("it-source-excluded", projectDir.getRoot(), TASK);
+		BuildResult result = gradleTest("it-source-excluded", projectDir.getRoot(), TASK);
 
 		assertThat(result.getOutput())
 			.contains(":" + TASK)
@@ -86,12 +111,17 @@ public class GenerateTaskTest {
 		;
 		//noinspection ConstantConditions
 		assertThat(result.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.NO_SOURCE);
+
 		assertThatCompilerNotDownloaded();
+
+		assertThat(buildDir()).doesNotExist();
+		assertThat(buildTemplate("ico")).doesNotExist();
+		assertThat(generatedDir()).doesNotExist();
 	}
 
 	@Test
 	public void testItSourceExists() throws IOException, KaitaiException {
-		BuildResult result = gradleBuild("it-source-exists", projectDir.getRoot(), TASK, "build");
+		BuildResult result = gradleTest("it-source-exists", projectDir.getRoot(), TASK, "build");
 
 		assertThat(result.getOutput())
 			.contains(":" + TASK)
@@ -103,7 +133,40 @@ public class GenerateTaskTest {
 		assertThat(result.task(":" + "compileJava").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
 		//noinspection ConstantConditions
 		assertThat(result.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+
 		assertThatCompilerWasDownloaded();
+
+		assertThat(buildDir()).isDirectory();
+		assertThat(buildTemplate("ico")).isRegularFile();
+		assertThat(generatedDir()).isDirectory();
+		assertThat(generatedClass("Ico")).isRegularFile();
+	}
+
+	@Test
+	public void testItSourceFailed() throws IOException, KaitaiException {
+		BuildResult result = gradleTestRunner("it-source-failed", projectDir.getRoot(), TASK, "build").buildAndFail();
+
+		String errorMark = "Fail to execute kaitai command: ";
+		String errorMessage = "/types/header/seq/0/id: invalid attribute ID: 'Magic', expected /^[a-z][a-z0-9_]*$/";
+
+		assertThat(result.getOutput())
+			.contains(":" + TASK)
+			.contains("BUILD FAILED")
+			.containsOnlyOnce(errorMark)
+			.containsOnlyOnce(errorMark + errorMessage)
+			.contains(errorMessage)
+		;
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.FAILED);
+		assertThat(result.task(":" + "compileJava")).isNull();
+		assertThat(result.task(":" + "test")).isNull();
+
+		assertThatCompilerWasDownloaded();
+
+		assertThat(buildDir()).isDirectory();
+		assertThat(buildTemplate("ico")).doesNotExist();
+		assertThat(generatedDir()).isDirectory();
+		assertThat(generatedClass("Ico")).isRegularFile();
 	}
 
 	@Test
@@ -111,7 +174,7 @@ public class GenerateTaskTest {
 		Path project = copyIntegrationProject("it-source-exists", projectDir.getRoot());
 
 		//Build after checkout
-		BuildResult first = gradleBuild(project, TASK, "build");
+		BuildResult first = gradleTest(project, TASK, "build");
 		//noinspection ConstantConditions
 		assertThat(first.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
 		//noinspection ConstantConditions
@@ -120,7 +183,7 @@ public class GenerateTaskTest {
 		assertThat(first.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
 
 		//Second build without changes
-		BuildResult second = gradleBuild(project, TASK, "build");
+		BuildResult second = gradleTest(project, TASK, "build");
 		//noinspection ConstantConditions
 		assertThat(second.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.UP_TO_DATE);
 		//noinspection ConstantConditions
@@ -129,6 +192,11 @@ public class GenerateTaskTest {
 		assertThat(second.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.UP_TO_DATE);
 
 		assertThatCompilerWasDownloaded();
+
+		assertThat(buildDir()).isDirectory();
+		assertThat(buildTemplate("ico")).isRegularFile();
+		assertThat(generatedDir()).isDirectory();
+		assertThat(generatedClass("Ico")).isRegularFile();
 	}
 
 	/**
@@ -136,7 +204,7 @@ public class GenerateTaskTest {
 	 */
 	@Test
 	public void testKaitaiBeforeJavaOnBuild() throws IOException, KaitaiException {
-		BuildResult result = gradleBuild("it-source-exists", projectDir.getRoot(), "build");
+		BuildResult result = gradleTest("it-source-exists", projectDir.getRoot(), "build");
 
 		assertThat(result.getOutput())
 			.contains(":" + TASK)
@@ -148,7 +216,13 @@ public class GenerateTaskTest {
 		assertThat(result.task(":" + "compileJava").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
 		//noinspection ConstantConditions
 		assertThat(result.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+
 		assertThatCompilerWasDownloaded();
+
+		assertThat(buildDir()).isDirectory();
+		assertThat(buildTemplate("ico")).isRegularFile();
+		assertThat(generatedDir()).isDirectory();
+		assertThat(generatedClass("Ico")).isRegularFile();
 	}
 
 	/**
@@ -156,7 +230,7 @@ public class GenerateTaskTest {
 	 */
 	@Test
 	public void testKaitaiBeforeKotlinWithGroovyOnBuild() throws IOException, KaitaiException {
-		BuildResult result = gradleBuild("it-source-kotlin-groovy", projectDir.getRoot(), "build");
+		BuildResult result = gradleTest("it-source-kotlin-groovy", projectDir.getRoot(), "build");
 
 		assertThat(result.getOutput())
 			.contains(":" + TASK)
@@ -170,7 +244,13 @@ public class GenerateTaskTest {
 		assertThat(result.task(":" + "compileKotlin").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
 		//noinspection ConstantConditions
 		assertThat(result.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+
 		assertThatCompilerWasDownloaded();
+
+		assertThat(buildDir()).isDirectory();
+		assertThat(buildTemplate("ico")).isRegularFile();
+		assertThat(generatedDir()).isDirectory();
+		assertThat(generatedClass("Ico")).isRegularFile();
 	}
 
 	/**
@@ -183,7 +263,7 @@ public class GenerateTaskTest {
 	 */
 	@Test
 	public void testKaitaiBeforeKotlinWithKotlinOnBuild() throws IOException, KaitaiException {
-		ProcResult result = gradleExecute("it-source-kotlin-kotlin", projectDir.getRoot(), "build");
+		ProcResult result = gradleNative("it-source-kotlin-kotlin", projectDir.getRoot(), "build");
 
 		assertThat(result.getOutputString())
 			.containsPattern(patternMultiline("Task :" + TASK + "$"))
@@ -192,6 +272,65 @@ public class GenerateTaskTest {
 			.containsPattern(patternMultiline("Task :" + "test" + "$"))
 			.contains("BUILD SUCCESSFUL")
 		;
+
 		assertThatCompilerWasDownloaded();
+
+		assertThat(buildDir()).isDirectory();
+		assertThat(buildTemplate("ico")).isRegularFile();
+		assertThat(generatedDir()).isDirectory();
+		assertThat(generatedClass("Ico")).isRegularFile();
+	}
+
+	/**
+	 * We run simply `build` but want implicitly generate java-files from Kaitai templates.
+	 */
+	@Test
+	public void testWithOption_fromFileClass() throws IOException, KaitaiException {
+		BuildResult result = gradleTest("it-withOption-fromFileClass", projectDir.getRoot(), "build");
+
+		assertThat(result.getOutput())
+			.contains(":" + TASK)
+			.contains("BUILD SUCCESSFUL")
+			.containsOnlyOnce("CustomStream.CustomStream(String)")
+		;
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + "compileJava").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+
+		assertThatCompilerWasDownloaded();
+
+		assertThat(buildDir()).isDirectory();
+		assertThat(buildTemplate("ico")).isRegularFile();
+		assertThat(generatedDir()).isDirectory();
+		assertThat(generatedClass("Ico")).isRegularFile();
+	}
+
+	/**
+	 * We run simply `build` but want implicitly generate java-files from Kaitai templates.
+	 */
+	@Test
+	public void testWithOption_opaqueTypes() throws IOException, KaitaiException {
+		BuildResult result = gradleTest("it-withOption-opaqueTypes", projectDir.getRoot(), "build");
+
+		assertThat(result.getOutput())
+			.contains(":" + TASK)
+			.contains("BUILD SUCCESSFUL")
+		;
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + TASK).getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + "compileJava").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+		//noinspection ConstantConditions
+		assertThat(result.task(":" + "test").getOutcome()).isEqualByComparingTo(TaskOutcome.SUCCESS);
+
+		assertThatCompilerWasDownloaded();
+
+		assertThat(buildDir()).isDirectory();
+		assertThat(buildTemplate("doc_container")).isRegularFile();
+		assertThat(generatedDir()).isDirectory();
+		assertThat(generatedClass("DocContainer")).isRegularFile();
 	}
 }

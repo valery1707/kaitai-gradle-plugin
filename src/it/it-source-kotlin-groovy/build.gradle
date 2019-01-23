@@ -17,6 +17,7 @@ buildscript {
 
 //Use case: source directory with KaiTai templates exists and compiled
 //Test code is written in Kotlin
+//Build script is written in Groovy
 
 // Kotlin specific configuration
 buildscript {

@@ -86,6 +86,18 @@ class GenerateTask extends DefaultTask {
 		config.cacheDir.toPath()
 	}
 
+	@Input
+	@Optional
+	def getFromFileClass() {
+		config.fromFileClass
+	}
+
+	@Input
+	@Optional
+	Boolean getOpaqueTypes() {
+		config.opaqueTypes
+	}
+
 	@TaskAction
 	def action() {
 		//Download Kaitai distribution into cache and unzip it
@@ -99,6 +111,9 @@ class GenerateTask extends DefaultTask {
 			KaitaiGenerator
 				.generator(kaitai, output, packageName)
 				.withSource(source)
+				.executionTimeout(config.executionTimeout)
+				.fromFileClass(fromFileClass)
+				.opaqueTypes(opaqueTypes)
 				.generate(logger)
 		} catch (KaitaiException e) {
 			throw new KaitaiException(
