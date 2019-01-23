@@ -89,22 +89,22 @@ class GenerateTask extends DefaultTask {
 	@TaskAction
 	def action() {
 		//Download Kaitai distribution into cache and unzip it
-		URL url = prepareUrl(getUrl(), getVersion());
-		Path cacheDir = prepareCache(getCacheDir(), logger);
-		Path kaitai = downloadKaitai(url, cacheDir, logger);
+		URL url = prepareUrl(getUrl(), getVersion())
+		Path cacheDir = prepareCache(getCacheDir(), logger)
+		Path kaitai = downloadKaitai(url, cacheDir, logger)
 
 		//Generate Java sources
-		Path output = mkdirs(output.toPath());
+		Path output = mkdirs(output.toPath())
 		try {
 			KaitaiGenerator
 				.generator(kaitai, output, packageName)
 				.withSource(source)
-				.generate(logger);
+				.generate(logger)
 		} catch (KaitaiException e) {
 			throw new KaitaiException(
 				"Fail to generate Java files"
 				, e
-			);
+			)
 		}
 	}
 }
