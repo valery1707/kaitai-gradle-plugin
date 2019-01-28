@@ -24,7 +24,7 @@ extra["isReleaseVersion"] = !version.toString().endsWith("SNAPSHOT")
 
 dependencies {
 	implementation(gradleApi())
-	implementation("name.valery1707.kaitai:kaitai-maven-plugin:0.1.3") {
+	implementation("name.valery1707.kaitai:kaitai-maven-plugin:0.1.4") {
 		exclude(group = "com.jcabi")
 	}
 
