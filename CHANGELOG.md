@@ -2,6 +2,8 @@ Change log for releases.
 
 # SNAPSHOT
 
+# 0.1.2
+
 * Update [kaitai-maven-plugin](https://github.com/valery1707/kaitai-maven-plugin) into version `0.1.4`
     * Can work with `commons-io:commons-io:2.4`
 

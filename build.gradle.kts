@@ -19,7 +19,7 @@ configure<JavaPluginConvention> {
 }
 
 group = "name.valery1707.kaitai"
-version = "0.1.2-SNAPSHOT"
+version = "0.1.2"
 extra["isReleaseVersion"] = !version.toString().endsWith("SNAPSHOT")
 
 dependencies {
@@ -31,6 +31,12 @@ dependencies {
 	testImplementation(gradleTestKit())
 	testImplementation("junit:junit:4.12")
 	testImplementation("org.assertj:assertj-core:2.9.0")
+}
+
+tasks.withType<Test> {
+	testLogging {
+		events("passed", "skipped", "failed")
+	}
 }
 
 tasks {
