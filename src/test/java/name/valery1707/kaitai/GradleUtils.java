@@ -137,8 +137,8 @@ public final class GradleUtils {
 
 	public static GradleRunner gradleTestRunner(Path root, String... tasks) {
 		List<String> taskList = new ArrayList<>(Arrays.asList(tasks));
-		taskList.add("--stacktrace");
-		taskList.add("--info");
+//		taskList.add("--stacktrace");
+//		taskList.add("--info");
 //		taskList.add("--debug");
 //		taskList = Arrays.asList("tasks", "--all");
 		return GradleRunner.create()

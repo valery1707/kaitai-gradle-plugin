@@ -107,19 +107,12 @@ class GenerateTask extends DefaultTask {
 
 		//Generate Java sources
 		Path output = mkdirs(output.toPath())
-		try {
-			KaitaiGenerator
-				.generator(kaitai, output, packageName)
-				.withSource(source)
-				.executionTimeout(config.executionTimeout)
-				.fromFileClass(fromFileClass)
-				.opaqueTypes(opaqueTypes)
-				.generate(logger)
-		} catch (KaitaiException e) {
-			throw new KaitaiException(
-				"Fail to generate Java files"
-				, e
-			)
-		}
+		KaitaiGenerator
+			.generator(kaitai, output, packageName)
+			.withSource(source)
+			.executionTimeout(config.executionTimeout)
+			.fromFileClass(fromFileClass)
+			.opaqueTypes(opaqueTypes)
+			.generate(logger)
 	}
 }
