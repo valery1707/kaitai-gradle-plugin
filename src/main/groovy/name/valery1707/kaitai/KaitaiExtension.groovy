@@ -25,7 +25,7 @@ class KaitaiExtension {
 	 *
 	 * @since 0.1.0
 	 */
-	String version = "0.8"
+	String version = "0.10"
 
 	/**
 	 * Cache directory for download KaiTai library.

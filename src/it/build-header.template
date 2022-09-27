@@ -8,10 +8,15 @@ buildscript {
 		// Replaced on copy
 		${dependencies}
 		//We depend on class-files and don't know about transitive dependencies
-		classpath("name.valery1707.kaitai:kaitai-maven-plugin:0.1.4") {
+		classpath("name.valery1707.kaitai:kaitai-maven-plugin:0.1.7-SNAPSHOT") {
 			//Groovy-style: exclude(group: "com.jcabi")
 			//Kotlin-style: exclude(group = "com.jcabi")
 			${excludeJcabi}
 		}
+		//We depend on class-files and don't know about transitive dependencies
+		//classpath("name.valery1707.kaitai:kaitai-gradle-plugin:0.1.3-SNAPSHOT") {
+			
+		//}
+		//classpath(files("/home/byteit101/kaitai-gradle-plugin/build/libs/kaitai-gradle-plugin-0.1.3-SNAPSHOT.jar"))
 	}
 }

@@ -10,7 +10,7 @@ buildscript {
 		mavenLocal()
 	}
 	dependencies {
-		classpath("name.valery1707.kaitai:kaitai-gradle-plugin:0.1.1")
+		classpath("name.valery1707.kaitai:kaitai-gradle-plugin:0.1.3-SNAPSHOT")
 	}
 }
 // */
@@ -22,7 +22,7 @@ buildscript {
 plugins {
 	java
 	id("nebula.kotlin") version "1.3.11"
-	id("name.valery1707.kaitai") version "0.1.1"
+	id("name.valery1707.kaitai") version "0.1.3-SNAPSHOT"
 }
 
 repositories {

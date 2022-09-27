@@ -25,7 +25,7 @@ class GenerateTask extends DefaultTask {
 		}
 		//Add generated directory into Gradle's build scope
 		if (project.hasProperty("sourceSets")) {
-			def generatedRoot = output.toPath().resolve("src")
+			def generatedRoot = output.toPath()
 			(project.property("sourceSets") as SourceSetContainer)
 				.findByName("main")
 				?.java { it.srcDir(generatedRoot.toAbsolutePath().normalize().toString()) }
