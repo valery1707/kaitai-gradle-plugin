@@ -11,6 +11,7 @@ plugins {
 
 repositories {
 	jcenter()
+	mavenLocal()
 }
 
 configure<JavaPluginConvention> {
@@ -24,7 +25,7 @@ extra["isReleaseVersion"] = !version.toString().endsWith("SNAPSHOT")
 
 dependencies {
 	implementation(gradleApi())
-	implementation("name.valery1707.kaitai:kaitai-maven-plugin:0.1.4") {
+	implementation("name.valery1707.kaitai:kaitai-maven-plugin:0.1.7-SNAPSHOT") {
 		exclude(group = "com.jcabi")
 	}
 
@@ -35,7 +36,13 @@ dependencies {
 
 tasks.withType<Test> {
 	testLogging {
-		events("passed", "skipped", "failed")
+		events("passed", "skipped", "failed")//, "standardOut", "standardError")
+
+		//showExceptions =true
+		////exceptionFormat= "full"
+		//showCauses =true
+		//showStackTraces=true
+
 	}
 }
 
